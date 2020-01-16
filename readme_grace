@@ -1,0 +1,16 @@
+A couple of things to know on Grace:
+
+1. You should check out your own interactive node and not abuse the logon node.
+   Do this with a command like:
+   `srun --pty --x11 -c 2 -p interactive -t 6:00:00 bash`
+
+2. The python modeles to run the code can be uploaded into the Grace environment by
+   `source grace_env.sh`
+
+3. Run the code with python3 run_ising.py [arguments]....
+
+4. Submit to slurm via sbatch slurm.input. *Note* if you are not using 
+   multiprocess:true on slurm on slurm, *be sure* to use curses:false.
+   (Curses is a module, named for cursor, which controls the output, but
+   Grace will not be happy using it with the graphical output.)
+

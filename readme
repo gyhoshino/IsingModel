@@ -1,0 +1,116 @@
+Getting started:
+    note: anything you are meant to type into the command line is shown as:
+    >> (you type this stuff here after the symbol)
+
+    0. Clone this code onto your own computer/Grace
+       >> git clone https://git.yale.edu/phys382L/ising2D_code
+
+    1. Enter the newly generated directory
+       >> cd ising2D_code
+
+    2. If your computer has a c++ compiler. On Grace and your own computer
+       (if it is a *NIX system):
+       >> bash compile.sh
+
+    *. Each time you use this code on Grace:
+       a. Be nice to the other users and check out your own node:
+       >> srun --pty --x11 -c 2 -p interactive -t 6:00:00 bash
+
+       b. Get Grace to load Python3 with appropriate libraries locally:
+       >> source grace_env.sh
+
+    3. Run the code to see if it works:
+       >> python3 run_ising.py
+
+       Look at the output in data/* and make sure you understand what is there.
+
+    4. Update the code in mod_ising.py to set the default input parameters.
+       Note that these can be entered directly from the command line, as well.
+
+       Note that for long jobs, you can submit jobs to the queues via slurm
+       with a slurm input file. For example, try something like:
+       >> sbatch slurm.input
+
+    5. Interpret your own resulting data sets.
+
+Other notes:
+
+    If you have a *NIX system or can shell into one (such as Grace),
+    then the first several steps should go quickly. It is completely possible
+    to do all of this on a PC. Some directions are provided in the readme_pc 
+    file.
+
+    *Do not* wait to start Step 5 until Step 4 is completed. It is much
+    preferable to start your data analysis sooner, and then re-run your
+    analysis over your "final" data set, instead of waiting until the 
+    final week for a "perfect" data set to seriously exploring the data and 
+    your intended analysis.
+
+
+Listing of files present with short explanations:
+
+1. run_ising.py :
+    Used to run the ising program. To execute type:
+    'python3 run_ising.py' in the command line.
+
+2. unpickle_to_csv.py :
+   The output from each temperature simulation is written to a new 
+   python "pickle" file in a local directory called "pickles".
+   Run this file by pointing to the local directory that contains 
+   "pickles" and it will compile a summary coma separated variable
+   (.csv) file.
+
+   For example:
+   If you have:
+   ./data/s0_N50/pickles
+
+   Then you can:
+   >> pyhton3 unpickle_to_csv data/s0_N50
+
+   And three files will be generated:
+   ./data/s0_N50/EM.csv
+   ./data/s0_N50/SpinCorr.csv
+   ./data/s0_N50/inp_readme.csv
+
+3. mod_ising.py (for "modify_ising.py") :
+    The only file that you *have* to modify in this lab.
+    It has controls for each ising lattice simulation.
+    See documentation inside of the code and in the lab handout.
+
+4. fn_ising.py (for "functions_ising.py") :
+    Contains various helper python functions which are used 
+    by mod_ising.py.
+
+5. lattice_lib.cxx (for "(ising)_lattice_library.cxx") :
+    A c++ implementation of the Markov Chain Monte Carlo
+    simulation. If it is compiled it makes a file called
+    "lattice_lib.so", the ".so" stands for "shared object",
+    then python will use it to run much faster.
+
+6. compile.sh :
+    Compile lattice_lib.cxx.  Type 'bash compile.sh' and
+    on *NIX-like systems (Linux, Unix, and MacOS),
+    generate lattice_lib.so from lattice_lib.cxx.
+
+7. library_interface.py :
+    Tells mod_ising.py how to talk to the c++ compiled library 
+    "lattice_lib.so". If lattice_lib.so is not present, then 
+    it will talk to lattice_pylib.py instead.
+
+8. lattice_pylib.py :
+    Implement a MCMC simulation in Python (in place of
+    lattice_lib.py).  It is *much* slower than the C++ library, 
+    and it is missing the get_SC_v1 (for 
+    "get_spin_correlation version 1") function.
+    Note that get_SC_v1 is an alternative to the legacy version get_SC_v0.
+
+    This file is primarily useful if you cannot compile lattice_lib.cxx
+    locally on your computer. In that case, it allows you prototype
+    smaller, shorter, runs locally and run larger runs (with the c++
+    library ) on the Yale Grace cluster.  
+
+9. readme_mod_ising :
+    Some explaination on how to modify and use mod_ising.py
+
+10. slurm.input :
+    A simple script to submit slurm jobs on Grace.

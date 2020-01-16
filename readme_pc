@@ -1,0 +1,20 @@
+1) wls in cortana prompt (should say "run command")
+- if it does not show up on cortana, follow instructions at this website: 
+	https://answers.microsoft.com/en-us/insider/forum/all/how-to-enable-the-windows-subsystem-for-linux/16e8f2e8-4a6a-4325-a89a-fd28c7841775
+2) get from whatever directory it drops you in to your actual user directory
+(cd .. twice, then cd Users/*your_name* or whatever)
+3) Get Anaconda
+	wget https://repo.continuum.io/archive/Anaconda3-5.2.0-Linux-x86_64.sh
+4) Install Anaconda
+	bash Anaconda3-5.2.0-Linux-x86_64.sh
+5) Check if it knows where python is (which python) if nothing comes up, add path:
+	export PATH=/home/cady/anaconda3/bin:$PATH
+6) try running python3 ising.py
+	It will probably throw an error that looks like: ImportError: libGL.so.1: cannot open shared object file: No such file or directory
+7) pip install PyQt5 (which is probably missing)
+8) if errors are still happening run:
+	sudo apt update
+	sudo apt install libgl1-mesa-glx
+9) try running ising again it should work now (fingers crossed)
+10) compile c++ library 
+	g++ --std=c++11 -shared -fPIC -o ising_lattice_lib.so ising_lattice_lib.cxx

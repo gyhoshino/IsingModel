@@ -1,0 +1,11 @@
+#!/bin/bash
+#SBATCH --job-name=my_job
+#SBATCH --ntasks=1 --nodes=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=6G
+#SBATCH --time=12:00:00
+#SBATCH --array=0-29
+#SBATCH -o slurm_out/80M_200N_%a.out
+
+source grace_env.sh
+python3 run_ising.py T_input_file:T_list.txt output_dir:first_run T_input_line:$SLURM_ARRAY_TASK_ID 

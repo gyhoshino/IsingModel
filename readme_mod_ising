@@ -1,0 +1,60 @@
+Some short notes about mod_ising.py:
+
+--- notes on the main simulation and code to modify ---
+For each temperature the simulation is run in the function
+'def run_ising_lattice(inp, T_final, updates=True):' at line 174
+in mod_ising.py.
+
+The main part of that simulation is the for loop at line 195.
+In this loop, values for T, B, sample_EM, sample_SC, prog_update,
+are obtained at each step from the five preceeding generators
+(named "gen_T", "gen_B", etc... as called in the zip function).
+
+The Python syntax used here is a "zip function". The zip funciton will
+update each of the values (T,B,sample_EM...) each step until one
+of the generators runs out of "yield" statement (see below). When
+this happens, it will stop, no matter if/how many more value are 
+available from the remaining generators.
+
+The generators run like normal code until they reach a "yield" statement.
+Then they pause and return the yield value until they are called again.
+When they are called again, they start at the next line of code and
+continue to the next "yield" statement. When they reach the end end of their
+function block, they quit.
+
+Note that three of the generators end in inifite "while True:" yield
+loops. As such, the for...zip loop in the default code is terminated
+by gen_T and gen_collect_EM functions reaching their end.
+
+--- notes on default input ---
+You can add any values that you like to the python 'dictionary' "inp" in the 
+program. As a check against errors, any keyward not added in mod_ising.py 
+will not be accepted from the command line. (However, any keyword present
+can have its default value at the command line overridden).
+
+By default, the code will run at temperatures from 'T_min' to 'T_max' spaced
+by steps of size 'T_spacing'.
+
+At each temperature, a MCMC algorithm is run. There are 'steps_anneal' number
+of annealing steps (in which the temperature, by default, starts at the high
+value of T0_anneal of 4.0 and linearly decreases to the simulation temperature),
+followed by 'steps_burnin' at the final temperature.
+
+This is followed by 'EM_samples' steps after which values of E and M are
+taken, each separated by EM_sample_spacing-1. 
+For example: if EM_sample=1000 and EM_sample_spacing=10, then this will 
+make 10k steps, from which E and M are calculated every tenth step.
+
+The total number of steps in the simulation is then
+steps_anneal + steps_burnin + EM_samples*EM_samples_spacing
+
+It takes a lot more computation to sample spin correlation. By default the
+value 'SC_samples' *must be* less than or equal than 'EM_samples'.
+
+--for fun--
+Use draw_lattice:true to get text output visuals of the lattice at
+the end of each step.
+
+--because you are brilliant--
+Find the bug in the wolff module of lattice_lib.cxx, fix it,
+and then use the Wolff algorithm.

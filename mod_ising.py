@@ -74,9 +74,12 @@ def set_input(cmd_line_args, parse_cmd_line_args):
     #-------------------------------------------------------------------------------------------------
 
     # Option (1) of above
-    inp['T_min']      = 2.0    # minimum temperature -> Not used if reading temperatures from 
-    inp['T_max']      = 4.3    # maximum temperature
-    inp['T_spacing']  = 0.1    # step size from min to max temperature
+    inp['T_min']      = 0.0    # minimum temperature -> Not used if reading temperatures from 
+    # 2.0 old
+    inp['T_max']      = 5.0    # maximum temperature
+    # 4.3 old
+    inp['T_spacing']  = 0.05    # step size from min to max temperature
+    # 0.1 old
 
     # Option (2) of above
     inp['T_input_file']  = ''
@@ -87,7 +90,7 @@ def set_input(cmd_line_args, parse_cmd_line_args):
     # Options used for annealing and burnin
     #----------------------------------------------
     inp['T0_anneal']         = 4.0        # start temperature (arbitrary; feel free to change)
-    inp['steps_anneal']      = int(10000)   # number of lattice steps in simulation
+    inp['steps_anneal']      = int(20000)   # number of lattice steps in simulation
     inp['steps_burnin']      = int(10000)   # optional parameter, used as naive default
 
     #----------------------------------------------

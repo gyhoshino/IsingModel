@@ -57,7 +57,7 @@ def set_input(cmd_line_args, parse_cmd_line_args):
     #----------------------------------------
     # Lattice size: i.e. lattice = N^2 points
     #----------------------------------------
-    inp['N']          = 20
+    inp['N']          = 50
 
     #-------------------------------------------------------------------------------------------------
     # For temperatures, either use:
@@ -74,11 +74,11 @@ def set_input(cmd_line_args, parse_cmd_line_args):
     #-------------------------------------------------------------------------------------------------
 
     # Option (1) of above
-    inp['T_min']      = 0.0    # minimum temperature -> Not used if reading temperatures from 
+    inp['T_min']      = 0    # minimum temperature -> Not used if reading temperatures from 
     # 2.0 old
-    inp['T_max']      = 5.0    # maximum temperature
+    inp['T_max']      = 5    # maximum temperature
     # 4.3 old
-    inp['T_spacing']  = 0.05    # step size from min to max temperature
+    inp['T_spacing']  = 0.1    # step size from min to max temperature
     # 0.1 old
 
     # Option (2) of above
@@ -90,13 +90,13 @@ def set_input(cmd_line_args, parse_cmd_line_args):
     # Options used for annealing and burnin
     #----------------------------------------------
     inp['T0_anneal']         = 4.0        # start temperature (arbitrary; feel free to change)
-    inp['steps_anneal']      = int(20000)   # number of lattice steps in simulation
-    inp['steps_burnin']      = int(10000)   # optional parameter, used as naive default
+    inp['steps_anneal']      = int(40000)   # number of lattice steps in simulation
+    inp['steps_burnin']      = int(20000)   # optional parameter, used as naive default
 
     #----------------------------------------------
     # Options for statistics collected
     #----------------------------------------------
-    inp['EM_samples']        = int(10000)
+    inp['EM_samples']        = int(30000)
     inp['EM_sample_spacing'] = 10
     inp['SC_samples']        = int(500)
     inp['SC_algorithm']      = 1 # 0 for legacy version, 1 for <ab>-<a><b>
@@ -110,7 +110,7 @@ def set_input(cmd_line_args, parse_cmd_line_args):
 
     # Should probably use B=0, and then modify B in the gen_B function for magnetic annealing
     inp['B']                 = 0.0    # magnetic field strength
-    inp['r_flip']            = 0.02   # Very cool result from PJ and Elizabeth
+    inp['r_flip']            = 0.04   # Very cool result from PJ and Elizabeth
                                       # showing autocorrelation effects starting about 0.05 in a 100x100 matrix
                                       # recommended to ultimately use smaller value than 0.05
 

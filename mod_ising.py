@@ -57,7 +57,7 @@ def set_input(cmd_line_args, parse_cmd_line_args):
     #----------------------------------------
     # Lattice size: i.e. lattice = N^2 points
     #----------------------------------------
-    inp['N']          = 10
+    inp['N']          = 100
 
     #-------------------------------------------------------------------------------------------------
     # For temperatures, either use:
@@ -74,11 +74,11 @@ def set_input(cmd_line_args, parse_cmd_line_args):
     #-------------------------------------------------------------------------------------------------
 
     # Option (1) of above
-    inp['T_min']      = 0.001    # minimum temperature -> Not used if reading temperatures from
+    inp['T_min']      = 4    # minimum temperature -> Not used if reading temperatures from
     # 2.0 old
-    inp['T_max']      = 3.0    # maximum temperature
+    inp['T_max']      = 4.1    # maximum temperature
     # 4.3 old
-    inp['T_spacing']  = 0.005    # step size from min to max temperature
+    inp['T_spacing']  = 0.1    # step size from min to max temperature
     # 0.1 old
 
     # Option (2) of above
@@ -90,27 +90,27 @@ def set_input(cmd_line_args, parse_cmd_line_args):
     # Options used for annealing and burnin
     #----------------------------------------------
     inp['T0_anneal']         = 10        # start temperature (arbitrary; feel free to change)
-    inp['steps_anneal']      = int(1000000)   # number of lattice steps in simulation
+    inp['steps_anneal']      = int(50000)   # number of lattice steps in simulation
     inp['steps_burnin']      = int(10000)   # optional parameter, used as naive default
 
     #----------------------------------------------
     # Options for statistics collected
     #----------------------------------------------
-    inp['EM_samples']        = int(10000)
-    inp['EM_sample_spacing'] = 10
-    inp['SC_samples']        = int(500)
+    inp['EM_samples']        = int(30000)
+    inp['EM_sample_spacing'] = 1
+    inp['SC_samples']        = int(10000)
     inp['SC_algorithm']      = 1 # 0 for legacy version, 1 for <ab>-<a><b>
 
     # Group the EM data into this many groups, take the std of each group, and then
     # take the std of these standard deviations.
-    inp['EM_n_groups_stdstd'] = 100 # number of sub groups from which to calc std(std(EM))
+    inp['EM_n_groups_stdstd'] = 1000 # number of sub groups from which to calc std(std(EM))
 
     # strongly recommended to use option 1 here. The legacy version is undocumented.
     inp['SC_algorithm']      = 1 # 0 for legacy version, 1 for <ab>-<a><b>
 
     # Should probably use B=0, and then modify B in the gen_B function for magnetic annealing
     inp['B']                 = 0.0    # magnetic field strength
-    inp['r_flip']            = 0.25   # Very cool result from PJ and Elizabeth
+    inp['r_flip']            = 0.10   # Very cool result from PJ and Elizabeth
                                       # showing autocorrelation effects starting about 0.05 in a 100x100 matrix
                                       # recommended to ultimately use smaller value than 0.05
 

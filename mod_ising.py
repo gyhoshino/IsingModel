@@ -7,10 +7,10 @@
 # First method:
 #  set_input:          Define allowed input parameters and defaults
 #
-# There are five generators, each named 'gen_<name>' that provide 
-#   five separate inputs for the main loop that calculated values at each 
+# There are five generators, each named 'gen_<name>' that provide
+#   five separate inputs for the main loop that calculated values at each
 #   final temperature. They are:
-#  
+#
 #  gen_T: Tempature at each step
 #  gen_B: Magnetic field at each step
 #  gen_collect_EM:  When to sample the average E and M values of each site
@@ -44,11 +44,11 @@ def set_input(cmd_line_args, parse_cmd_line_args):
           around throughout the Python part of the program.
 
           Feel free to add your own input parameters.
-    
+
     input:   sys.argv
              use syntax of keyword:value on command line
     return:  dict[key] = value
-    note:    Any value which can be turned into a number will be a float 
+    note:    Any value which can be turned into a number will be a float
              if it has a '.', otherwise it will be an int.
 
     """
@@ -62,8 +62,8 @@ def set_input(cmd_line_args, parse_cmd_line_args):
     #-------------------------------------------------------------------------------------------------
     # For temperatures, either use:
     # (1) T_min, T_max, and T_spacing which will cause it to run through all temperatures in the range
-    #  or 
-    # (2) T_input_file and T_input_line, which will run the single temperature on line(T_input_line) 
+    #  or
+    # (2) T_input_file and T_input_line, which will run the single temperature on line(T_input_line)
     #     of file(T_input_file)
     #
     # The program will default to option(2) unless T_input_file != '', in which case it will try
@@ -73,10 +73,9 @@ def set_input(cmd_line_args, parse_cmd_line_args):
     # simultaneously.
     #-------------------------------------------------------------------------------------------------
 
-    # Option (1) of above
-    inp['T_min']      = 0    # minimum temperature -> Not used if reading temperatures from 
+    inp['T_min']      = 4    # minimum temperature -> Not used if reading temperatures from
     # 2.0 old
-    inp['T_max']      = 5    # maximum temperature
+    inp['T_max']      = 4.1    # maximum temperature
     # 4.3 old
     inp['T_spacing']  = 0.1    # step size from min to max temperature
     # 0.1 old
@@ -97,20 +96,21 @@ def set_input(cmd_line_args, parse_cmd_line_args):
     # Options for statistics collected
     #----------------------------------------------
     inp['EM_samples']        = int(30000)
-    inp['EM_sample_spacing'] = 10
-    inp['SC_samples']        = int(500)
+    inp['EM_sample_spacing'] = 1
+    inp['SC_samples']        = int(10000)
+
     inp['SC_algorithm']      = 1 # 0 for legacy version, 1 for <ab>-<a><b>
 
     # Group the EM data into this many groups, take the std of each group, and then
     # take the std of these standard deviations.
-    inp['EM_n_groups_stdstd'] = 100 # number of sub groups from which to calc std(std(EM))
+    inp['EM_n_groups_stdstd'] = 1000 # number of sub groups from which to calc std(std(EM))
 
     # strongly recommended to use option 1 here. The legacy version is undocumented.
     inp['SC_algorithm']      = 1 # 0 for legacy version, 1 for <ab>-<a><b>
 
     # Should probably use B=0, and then modify B in the gen_B function for magnetic annealing
     inp['B']                 = 0.0    # magnetic field strength
-    inp['r_flip']            = 0.04   # Very cool result from PJ and Elizabeth
+    inp['r_flip']            = 0.10   # Very cool result from PJ and Elizabeth
                                       # showing autocorrelation effects starting about 0.05 in a 100x100 matrix
                                       # recommended to ultimately use smaller value than 0.05
 
@@ -138,14 +138,14 @@ def set_input(cmd_line_args, parse_cmd_line_args):
     #-------------------------------
     # options for what to pickle
     #-------------------------------
-    inp['pickle_final_lattice_state'] = True 
+    inp['pickle_final_lattice_state'] = True
     inp['pickle_full_E']          = False # warning: this may take a lot of memory
     inp['pickle_full_M']          = False # warning: this may take a lot of memory
     inp['pickle_full_SC']         = False # warning: this may take a lot of memory
     inp['unpickle_to_csv']        = True
 
     inp['seed_offset']                = 0 # Important to use when submiting many jobs at the same time
-                                          # - if 0 will default to T_input_line if T_input_file is used 
+                                          # - if 0 will default to T_input_line if T_input_file is used
                                           # - will set the seed exactly if < 0 (for an exact repeat run)
 
     #function call from support_methods
@@ -161,7 +161,7 @@ def set_input(cmd_line_args, parse_cmd_line_args):
             inp['T_max'] = inp['T_min'] - 1.0
         except:
             exit(f'Fatal error in trying to read input line {inp["T_input_line"]}')
-        
+
         if inp["seed_offset"] == 0:
             inp["seed_offset"] = inp['T_input_line']
 
@@ -175,7 +175,7 @@ def set_input(cmd_line_args, parse_cmd_line_args):
         print('Warning: Not using C++ implementation of the Ising Lattice.')
         print('         Therefore defaulting the SC_algorithm to option 0 (vs 1).\n')
         inp['SC_algorithm'] = 0
-        
+
     if inp['print_inp']:
         print('Printed list of input keys:')
         for key in sorted(inp.keys()):
@@ -186,7 +186,7 @@ def set_input(cmd_line_args, parse_cmd_line_args):
 
 def gen_T(inp, T_final):
     '''Yield values of temperature.
-    Default implementation: 
+    Default implementation:
     (1) Start at T0_anneal and linearly drop to T_final in steps anneal
     (2) Yield T_final for all remaining steps.'''
 
@@ -224,7 +224,7 @@ def gen_collect_EM(inp, T_final=None):
       EM_sample_spacing-1 between each sample.'''
     for _ in range(inp['steps_anneal']+inp['steps_burnin']):
         yield False
-    
+
     for _ in range(inp['EM_samples']):
         for __ in range(inp['EM_sample_spacing']-1):
             yield False
@@ -232,11 +232,11 @@ def gen_collect_EM(inp, T_final=None):
 
 def gen_collect_SC(inp, T_final=None):
     '''Yield when to collect Spin Correlation values.
-    Default implementation: Collect EM_samples evenly spaced 
+    Default implementation: Collect EM_samples evenly spaced
              throughout where E and M values are sampled.'''
     for _ in range(inp['steps_anneal']+inp['steps_burnin']):
         yield False
-    
+
     space_corr = int( (inp['EM_samples']*inp['EM_sample_spacing'])
                       /inp['SC_samples'])
     if space_corr == 0:
@@ -255,7 +255,7 @@ def gen_collect_SC(inp, T_final=None):
         yield False
 
 def gen_prog_update(inp):
-    '''Yield when to update the screen. 
+    '''Yield when to update the screen.
     Do not use with multiprocess.'''
 
     #if using multiprocess, always return False
@@ -275,7 +275,7 @@ def gen_prog_update(inp):
         for _ in range(n_spacing-1):
             n_complete += 1
             yield False
-            
+
         n_complete += 1
         yield (n_complete, n_total)
 
@@ -299,7 +299,7 @@ def run_ising_lattice(inp, T_final, seed_offset=0, updates=True):
         E_collect = []
         M_collect = []
         SC_collect = []
-        
+
         for T, B, sample_EM, sample_SC, prog_update in zip(
             gen_T(inp, T_final),
             gen_B(inp),
@@ -322,7 +322,7 @@ def run_ising_lattice(inp, T_final, seed_offset=0, updates=True):
         # the results.
         if updates:
             inp['print'].update_Tprogress(prog_update,finished=True)
-        
+
         if inp['draw_lattice'] and not inp['multiprocess']:
             inp['print'].draw_lattice(lattice, T=T_final)
 
@@ -331,8 +331,8 @@ def run_ising_lattice(inp, T_final, seed_offset=0, updates=True):
         M_data  = np.array(M_collect)
 
         # add the E_stdstd values
-        np.random.shuffle(E_data) 
-        np.random.shuffle(M_data) 
+        np.random.shuffle(E_data)
+        np.random.shuffle(M_data)
 
         n_groups = inp['EM_n_groups_stdstd']
         group_size = len(E_data)//n_groups
@@ -351,7 +351,7 @@ def run_ising_lattice(inp, T_final, seed_offset=0, updates=True):
             'SC_mean'  : SC_data.mean(0),
             'SC_std'   : SC_data.std(0),
             'SC_len'   : np.shape(SC_data)[0]
-        }     
+        }
 
         # make a copy of inp data -- except the printer class
         inp_pickle = inp.copy()
@@ -388,5 +388,5 @@ def make_T_array(inp):
     if inp['T_max'] <= inp['T_min']:
         return [inp['T_min'],]
     else:
-        # for when T_max-T_min is evenly divisible by T_spacing. 
+        # for when T_max-T_min is evenly divisible by T_spacing.
         return np.repeat(np.arange(inp['T_min'], inp['T_max']+1E-5, inp['T_spacing']), 2)

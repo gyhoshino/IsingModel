@@ -57,7 +57,7 @@ def set_input(cmd_line_args, parse_cmd_line_args):
     #----------------------------------------
     # Lattice size: i.e. lattice = N^2 points
     #----------------------------------------
-    inp['N']          = 100
+    inp['N']          = 50
 
     #-------------------------------------------------------------------------------------------------
     # For temperatures, either use:
@@ -73,7 +73,6 @@ def set_input(cmd_line_args, parse_cmd_line_args):
     # simultaneously.
     #-------------------------------------------------------------------------------------------------
 
-    # Option (1) of above
     inp['T_min']      = 4    # minimum temperature -> Not used if reading temperatures from
     # 2.0 old
     inp['T_max']      = 4.1    # maximum temperature
@@ -89,9 +88,9 @@ def set_input(cmd_line_args, parse_cmd_line_args):
     #----------------------------------------------
     # Options used for annealing and burnin
     #----------------------------------------------
-    inp['T0_anneal']         = 10        # start temperature (arbitrary; feel free to change)
-    inp['steps_anneal']      = int(50000)   # number of lattice steps in simulation
-    inp['steps_burnin']      = int(10000)   # optional parameter, used as naive default
+    inp['T0_anneal']         = 4.0        # start temperature (arbitrary; feel free to change)
+    inp['steps_anneal']      = int(40000)   # number of lattice steps in simulation
+    inp['steps_burnin']      = int(20000)   # optional parameter, used as naive default
 
     #----------------------------------------------
     # Options for statistics collected
@@ -99,6 +98,7 @@ def set_input(cmd_line_args, parse_cmd_line_args):
     inp['EM_samples']        = int(30000)
     inp['EM_sample_spacing'] = 1
     inp['SC_samples']        = int(10000)
+
     inp['SC_algorithm']      = 1 # 0 for legacy version, 1 for <ab>-<a><b>
 
     # Group the EM data into this many groups, take the std of each group, and then

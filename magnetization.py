@@ -12,7 +12,7 @@ def f(x, a, b, critical_temp):
 x = []
 y = []
 sigma = []
-with open('data1/s13_N100/EM.csv','r') as csvfile:
+with open('grace_data/s0_N100/EM.csv','r') as csvfile:
     plots = csv.reader(csvfile, delimiter=',')
     for row in plots:
         try:
@@ -32,7 +32,9 @@ for i in range(len(x)):
 x = np.array(x[index])
 y = np.array(y[index])
 sigma = np.array(sigma[index])
-fit = curve_fit(f, x, y, p0)[0]
+full_fit = curve_fit(f, x, y, p0)
+fit = full_fit[0]
+var = full_fit[1]
 print(fit)
 FIT_a = fit[0]
 FIT_b = fit[1]
@@ -47,4 +49,8 @@ plt.legend()
 plt.show()
 residuals = (y - f(x, FIT_a, FIT_b, FIT_CRITICAL_TEMP))**2
 chi_squared = sum(residuals/sigma**2)/len(residuals)
-print(chi_squared)
+print("beta:" +  str(fit[1]))
+print("Uncertainty beta:" + str(np.sqrt(var[1,1])))
+print("TC:" + str(fit[2]))
+print("Uncertainty TC:" + str(np.sqrt(var[2,2])))
+print("chi-squared:" + str(chi_squared))

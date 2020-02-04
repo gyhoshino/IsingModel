@@ -103,7 +103,7 @@ def set_input(cmd_line_args, parse_cmd_line_args):
 
     # Group the EM data into this many groups, take the std of each group, and then
     # take the std of these standard deviations.
-    inp['EM_n_groups_stdstd'] = 1000 # number of sub groups from which to calc std(std(EM))
+    inp['EM_n_groups_stdstd'] = 500 # number of sub groups from which to calc std(std(EM))
 
     # strongly recommended to use option 1 here. The legacy version is undocumented.
     inp['SC_algorithm']      = 1 # 0 for legacy version, 1 for <ab>-<a><b>
